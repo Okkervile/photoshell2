@@ -112,6 +112,34 @@ main (int argc, char **argv)
             
             i++;
         }
+
+        if(!strcmp(cmdLine,"previewNAN"))
+         {
+             CameraFile *file;
+             char output_file[32];
+
+             fprintf(stderr,"preview %d\n", i);
+             retval = gp_file_new(&file);
+             if (retval != GP_OK) {
+                 fprintf(stderr,"gp_file_new: %d\n", retval);
+                 exit(1);
+             }
+
+             retval = gp_camera_capture_preview(canon, file, canoncontext);
+             if (retval != GP_OK) {
+                 fprintf(stderr,"gp_camera_capture_preview(%d): %d\n", i, retval);
+                 exit(1);
+             }
+             sprintf(output_file, "snapshot.jpg", i);
+             retval = gp_file_save(file, output_file);
+             if (retval != GP_OK) {
+                 fprintf(stderr,"gp_camera_capture_preview(%d): %d\n", i, retval);
+                 exit(1);
+             }
+             gp_file_unref(file);
+
+             i++;
+         }
         if(!strcmp(cmdLine,"gpclose"))
         {
             gp_camera_exit(canon, canoncontext);
