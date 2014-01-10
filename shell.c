@@ -24,18 +24,21 @@ void mysigterm()
 {
     printf("I caught the SIGTERM signal!\n");
     gp_camera_exit(canon, canoncontext);
-    return;
+    exit(SIGTERM);
+
 }
 void mysigint()
 {
     printf("I caught the SIGINT signal!\n");
     gp_camera_exit(canon, canoncontext);
-    return;
-}void mysighup()
+    exit(SIGINT);
+}
+
+void mysighup()
 {
     printf("I caught the SIGHUP signal!\n");
     gp_camera_exit(canon, canoncontext);
-    return;
+    exit(SIGHUP);
 }
 
 
