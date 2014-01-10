@@ -26,6 +26,18 @@ void mysigterm()
     gp_camera_exit(canon, canoncontext);
     return;
 }
+void mysigint()
+{
+    printf("I caught the SIGINT signal!\n");
+    gp_camera_exit(canon, canoncontext);
+    return;
+}void mysighup()
+{
+    printf("I caught the SIGHUP signal!\n");
+    gp_camera_exit(canon, canoncontext);
+    return;
+}
+
 
 
 
@@ -56,6 +68,8 @@ main (int argc, char **argv)
 	const char *version = "0.0.3";
     char * cmdLine, shell_prompt[100];
     signal(SIGTERM, mysigterm);
+    signal(SIGINT, mysigint);
+    signal(SIGHUP, mysighup);
     int loop = 1;
     parseInfo *info; //info stores all the information returned by parser.
     struct commandType *com; //com stores command name and Arg list for one command.
