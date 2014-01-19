@@ -17,6 +17,8 @@
 #include <sys/time.h>
 
 
+
+
 Camera	*canon;
 GPContext *canoncontext;
 /* Our own SIGTERM handler */
@@ -74,18 +76,19 @@ main (int argc, char **argv)
     signal(SIGINT, mysigint);
     signal(SIGHUP, mysighup);
     int loop = 1;
+    int picctr=0;
     parseInfo *info; //info stores all the information returned by parser.
     struct commandType *com; //com stores command name and Arg list for one command.
     //fprintf(stderr, "Until you fix the exit command press ctrl-c to exit\n");
 
   	int	i=0, retval;
   	canoncontext= sample_create_context();
-  	//time_t  timeout = time(NULL);
+  	time_t  timing = time(NULL);
 
   	gp_camera_new(&canon);
 
 
-    
+
 #ifdef UNIX
     
     fprintf(stdout, "This is the UNIX version\n");
@@ -112,7 +115,7 @@ main (int argc, char **argv)
         // Add input to history.
         add_history(cmdLine);
         //insert your code about history and !x !-x here
-        time_t ctr=time(NULL);
+        //time_t ctr=time(NULL);
        /* if(ctr > timeout+100){
         	loop=0;
         	gp_camera_exit(canon, canoncontext);
@@ -152,7 +155,36 @@ main (int argc, char **argv)
            // timeout = time(NULL);
 
         }
+        if(!strncmp(cmdLine,"manufocus", 8))
+                 {
 
+
+
+
+        				char *ans;
+
+        				ans = strchr(cmdLine,'=');
+        				ans++;
+        				int xxx=atoi(ans);
+        				//fprintf(stderr,"gp_file_new: %d\n", xxx);
+        				camera_manual_focus (canon, xxx , canoncontext);
+
+                 }
+        if(!strncmp(cmdLine,"iso", 3))
+                        {
+
+
+
+
+               				char *ans;
+
+               				ans = strchr(cmdLine,'=');
+               				ans++;
+               				//int xxx=atoi(ans);
+               				//fprintf(stderr,"gp_file_new: %d\n", xxx);
+               				camera_set_iso (canon, ans , canoncontext);
+
+                        }
         if(!strcmp(cmdLine,"previewNAN"))
          {
 
@@ -225,6 +257,18 @@ main (int argc, char **argv)
         			fprintf(stderr,"version %s\n", version);
                 }
 
+        if(!strcmp(cmdLine,"shot"))
+        {
+        	//picctr++;
+        	char filejpg[32];
+        	timing = time(NULL);
+        	int tim = timing;		;
+        	sprintf(filejpg, "%d.jpg", tim);
+        	capture_to_file(canon, canoncontext, filejpg);
+        }
+
+
+
         if(!strcmp(cmdLine,"loop"))
     	 while(1){
 			usleep(500);
@@ -252,6 +296,9 @@ main (int argc, char **argv)
             }
             gp_file_unref(file);
     		}
+
+
+
 
         // free_info(info);
         free(cmdLine);
